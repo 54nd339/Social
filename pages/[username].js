@@ -344,7 +344,7 @@ function ProfilePage({
                 }
                 content={
                   isUserOnOwnAccount
-                    ? `Create a new post to start seeing posts here and get your socialshare of attention.`
+                    ? `Create a new post to start seeing posts here and get your socialfair of attention.`
                     : "This user hasn't made a single post. It looks like they are only interested in viewing other posts and lurking around."
                 }
               />
