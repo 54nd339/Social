@@ -17,7 +17,7 @@ import baseUrl from "../utils/baseUrl";
 import { CircularProgress } from "@material-ui/core";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import Email from "../utils/email";
+// import Email from "../utilsServer/email";
 
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/; //regex to validate username
 
