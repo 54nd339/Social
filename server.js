@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const app = express();
 //() is used to initialise app
@@ -24,6 +25,7 @@ const {
 } = require("./utils/messageActions");
 
 connectDb();
+app.use(cors());
 app.use(express.json()); //bodyparser- used basically for getting req.body in a good format
 //In next js, server and app both run on the same port, i.e. port 3000
 // we don't need two separate ports for frontend and backend
