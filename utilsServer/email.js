@@ -33,7 +33,7 @@ class Email {
   }
 
   async sendWelcome() {
-    await this.send("Welcome To SocialShare!", "Welcome to the SocialShare Family");
+    await this.send("Welcome To SocialFair!", `dear ${this.firstName}\n\tWelcome to the SocialFair Family where you can share your fair share of memories with your friends and family. \n\nRegards,\nSocialFair Team`);
   }
 
   async sendPasswordReset(url) {
