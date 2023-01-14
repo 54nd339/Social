@@ -60,7 +60,8 @@ function AddUserInfo({
 
       const CancelToken = axios.CancelToken; //to cancel a pending request and then we make a new request
 
-      //basically whenever we send a new request we have to check if we have another request before it pending and then we cancel it first. That'll happen when 'cancel' variable has some value assigned to it, which is what we checked in 1st line of try block
+      //basically whenever we send a new request we have to check if we have another request before it pending and then we cancel it first.
+      // That'll happen when 'cancel' variable has some value assigned to it, which is what we checked in 1st line of try block
       // console.log("inside of checkUsername");
       const res = await axios.get(`${baseUrl}/api/signup/${username}`, {
         cancelToken: new CancelToken((canceler) => {

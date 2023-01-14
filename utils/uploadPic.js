@@ -5,7 +5,7 @@ const uploadPic = async (media) => {
   try {
     const form = new FormData();
     form.append("file", media);
-    form.append("upload_preset", "social_media_MERN"); //name of upload preset on cloudinary
+    form.append("upload_preset", "socialfair"); //name of upload preset on cloudinary
     form.append("cloud_name", "dhc5mer1w");
 
     const res = await axios.post(process.env.CLOUDINARY_URL, form);

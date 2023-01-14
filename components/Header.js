@@ -46,7 +46,7 @@ function Header({ user }) {
               fontSize: "1.8rem",
             }}
           >
-            fae
+            ss
           </p>
         </div>
 
@@ -59,7 +59,7 @@ function Header({ user }) {
               fontSize: "1.8rem",
             }}
           >
-            fae
+            ss
           </p>
         </div>
 

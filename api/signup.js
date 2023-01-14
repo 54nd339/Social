@@ -8,6 +8,7 @@ const ChatModel = require("../models/ChatModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs"); //to encrypt password
 const isEmail = require("validator/lib/isEmail");
+const Email = require("../utilsServer/email");
 const userPng =
   "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"; //default profile pic for the user
 
@@ -99,6 +100,9 @@ router.post("/", async (req, res) => {
 
     await new ChatModel({ user: user._id, chats: [] }).save();
     // await new ChatModel({ user: user._id, chats: [] }).save();
+
+    //---SENDING EMAIL---
+    await new Email(user).sendWelcome();
 
     //JWT
     const payload = { userId: user._id };

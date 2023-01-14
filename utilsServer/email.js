@@ -5,6 +5,7 @@ class Email {
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.from = `${process.env.EMAIL_FROM}`;
+    console.log(user);
   }
 
   newTransport() {
@@ -32,7 +33,7 @@ class Email {
   }
 
   async sendWelcome() {
-    await this.send("Welcome To Twitter!", "Welcome to the Twitter Family");
+    await this.send("Welcome To SocialShare!", "Welcome to the SocialShare Family");
   }
 
   async sendPasswordReset(url) {
