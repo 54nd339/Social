@@ -2,7 +2,8 @@
   "name": "socialfair",
   "version": "0.1.0",
   "engines": {
-    "node": "16.18.0"
+    "node": "16.18.0",
+    "npm": "8.19.2"
   },
   "private": true,
   "scripts": {
