@@ -1,13 +1,8 @@
 {
   "functions": [
     {
-      "source": ".", 
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
-      ]
+      "source": ".",
+      "runtime": "nodejs16"
     }
   ],
   "hosting": {
@@ -20,7 +15,7 @@
     "rewrites": [
       {
         "source": "**",
-        "functions": "api"
+        "function": "api"
       }
     ]
   }

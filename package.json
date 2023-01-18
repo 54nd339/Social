@@ -2,15 +2,21 @@
   "name": "socialfair",
   "version": "0.1.0",
   "engines": {
-    "node": "16.8.0"
+    "node": "16"
   },
   "private": true,
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
     "start": "cross-env NODE_ENV=production node server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "functions:start": "npm run shell",
+    "deploy": "npm run build && cross-env NODE_ENV=production firebase deploy --only functions,hosting",
+    "logs": "firebase functions:log"
   },
+  "main": "server.js",
   "dependencies": {
     "@heroicons/react": "^1.0.4",
     "@material-ui/core": "^4.12.3",
@@ -52,7 +58,9 @@
     "tailwind-scrollbar-hide": "^1.0.3",
     "tailwindcss": "^2.2.9",
     "uuid": "^8.3.2",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.3",
@@ -60,6 +68,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.0",
-    "postcss": "^8.3.6"
+    "postcss": "^8.3.6",
+    "firebase-functions-test": "^0.2.0"
   }
 }

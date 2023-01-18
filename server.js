@@ -1,3 +1,4 @@
+// const functions = require("firebase-functions");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -88,21 +89,24 @@ io.on("connection", (socket) => {
 //socket.current = io(baseUrl) in messages.js
 //this is basically when socket makes the initial connection
 
-nextApp.prepare().then(() => {
-  app.use("/api/signup", require("./api/signup"));
-  app.use("/api/auth", require("./api/auth"));
-  app.use("/api/posts", require("./api/posts"));
-  app.use("/api/notifications", require("./api/notifications"));
-  app.use("/api/profile", require("./api/profile"));
-  app.use("/api/search", require("./api/search"));
-  app.use("/api/chats", require("./api/chats"));
+// exports.api = functions.https.onRequest((req, res) => {
+  // return
+  nextApp.prepare().then(() => {
+    app.use("/api/signup", require("./api/signup"));
+    app.use("/api/auth", require("./api/auth"));
+    app.use("/api/posts", require("./api/posts"));
+    app.use("/api/notifications", require("./api/notifications"));
+    app.use("/api/profile", require("./api/profile"));
+    app.use("/api/search", require("./api/search"));
+    app.use("/api/chats", require("./api/chats"));
 
-  app.all("*", (req, res) => handle(req, res));
+    app.all("*", (req, res) => handle(req, res));
 
-  server.listen(PORT, (err) => {
-    if (err) throw err;
-    console.log(`Express server running on ${PORT}`);
+    server.listen(PORT, (err) => {
+      if (err) throw err;
+      console.log(`Express server running on ${PORT}`);
+    });
   });
-});
+// });
 //we're calling app.all because all pages in next.js are SSR(Server Side Rendered)
 //if we don't type app.all, the files inside the pages folder won't work
