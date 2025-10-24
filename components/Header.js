@@ -24,6 +24,7 @@ import RoundedIcon from "./HelperComponents/RoundedIcon";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import Dropdown from "./Dropdown";
 import SearchDropdown from "./SearchDropdown";
+import DarkModeToggle from "./DarkModeToggle";
 
 function Header({ user }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -34,7 +35,7 @@ function Header({ user }) {
   };
 
   return (
-    <div className="flex bg-white sticky top-0 z-50 shadow-lg h-16 items-center">
+    <div className="flex bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-lg h-16 items-center">
       {/* Left */}
       <div className="ml-2 sm:ml-5 p-1 flex items-center">
         <div className="hidden sm:flex items-center">
@@ -65,11 +66,11 @@ function Header({ user }) {
 
         <div
           onClick={() => setShowSearchDropdown(true)}
-          className="flex ml-3 items-center rounded-full bg-gray-100 p-2  h-12"
+          className="flex ml-3 items-center rounded-full bg-gray-100 dark:bg-gray-800 p-2  h-12"
         >
-          <SearchIcon className="h-5 text-gray-600 px-1.5 lg:px-0 cursor-pointer" />
+          <SearchIcon className="h-5 text-gray-600 dark:text-gray-300 px-1.5 lg:px-0 cursor-pointer" />
           <input
-            className="ml-2 bg-transparent outline-none placeholder-gray-500 font-thin hidden lg:flex md:items-center flex-shrink"
+            className="ml-2 bg-transparent outline-none placeholder-gray-500 dark:placeholder-gray-400 font-thin hidden lg:flex md:items-center flex-shrink"
             style={{ width: "7.5rem" }}
             type="text"
             placeholder="Search users"
@@ -126,14 +127,14 @@ function Header({ user }) {
 
       {/* Right */}
       <Link href={`/${user.username}`} passHref>
-        <div className="flex lg:ml-10 items-center h-12 sm:hover:bg-gray-200 px-1 rounded-3xl m-3 cursor-pointer">
+        <div className="flex lg:ml-10 items-center h-12 sm:hover:bg-gray-200 dark:hover:bg-gray-700 px-1 rounded-3xl m-3 cursor-pointer">
           <Image
             className="rounded-full mr-3 hidden sm:inline-flex"
             src={user.profilePicUrl}
             alt="user avatar"
           />
           <p
-            className="hidden sm:inline-flex  text-gray-600 sm:mr-4"
+            className="hidden sm:inline-flex  text-gray-600 dark:text-gray-300 sm:mr-4"
             style={{
               fontFamily: "Roboto",
               fontSize: "1.05rem",
@@ -144,6 +145,9 @@ function Header({ user }) {
           </p>
         </div>
       </Link>
+      <div className="hidden sm:flex items-center mr-3">
+        <DarkModeToggle />
+      </div>
       <Link href="/settings" passHref>
         <div className="hidden sm:flex items-center mr-3">
           <RoundedIcon

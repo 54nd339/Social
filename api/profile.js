@@ -281,6 +281,55 @@ router.post("/settings/password", authMiddleware, async (req, res) => {
   }
 });
 
+//UPDATE PROFILE INFO
+router.put("/", authMiddleware, async (req, res) => {
+  try {
+    const { name, email, username } = req.body;
+
+    if (!name || !email || !username) {
+      return res.status(400).send("Name, email, and username are required");
+    }
+
+    if (!isEmail(email)) {
+      return res.status(401).send("Invalid Email");
+    }
+
+    if (!isLength(username, { min: 3, max: 30 })) {
+      return res.status(401).send("Username must be between 3 and 30 characters");
+    }
+
+    // Check if email is already taken by another user
+    const existingEmail = await UserModel.findOne({ 
+      email: email.toLowerCase(), 
+      _id: { $ne: req.userId } 
+    });
+    if (existingEmail) {
+      return res.status(401).send("Email already taken");
+    }
+
+    // Check if username is already taken by another user
+    const existingUsername = await UserModel.findOne({ 
+      username: username.toLowerCase().trim(), 
+      _id: { $ne: req.userId } 
+    });
+    if (existingUsername) {
+      return res.status(401).send("Username already taken");
+    }
+
+    const user = await UserModel.findById(req.userId);
+    user.name = name;
+    user.email = email.toLowerCase();
+    user.username = username.toLowerCase().trim();
+    
+    await user.save();
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
 //UPDATE MESSAGE POPUP SETTINGS
 router.post("/settings/messagePopup", authMiddleware, async (req, res) => {
   try {

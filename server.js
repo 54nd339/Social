@@ -97,6 +97,7 @@ nextApp.prepare().then(() => {
   app.use("/api/profile", require("./api/profile"));
   app.use("/api/search", require("./api/search"));
   app.use("/api/chats", require("./api/chats"));
+  app.use("/api/forgot-password", require("./api/forgot-password"));
 
   app.all("*", (req, res) => handle(req, res));
 

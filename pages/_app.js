@@ -8,18 +8,21 @@ import { parseCookies, destroyCookie } from "nookies";
 import baseUrl from "../utils/baseUrl";
 import { redirectUser } from "../utils/authUser";
 import Layout from "../components/Layout";
+import { ThemeProvider } from "../contexts/ThemeContext";
 import "react-toastify/dist/ReactToastify.css"; //import react toastify in _app.js
 import "semantic-ui-css/semantic.min.css"; //semantic ui css package
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout {...pageProps}>
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
+    <ThemeProvider>
+      <Layout {...pageProps}>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
 
-      {/*here, we could've also done: <Component posts={pageProps.posts}></Component> */}
-    </Layout>
+        {/*here, we could've also done: <Component posts={pageProps.posts}></Component> */}
+      </Layout>
+    </ThemeProvider>
   );
 }
 

@@ -106,7 +106,9 @@ function Login() {
           <Button disabled={submitDisabled} onClick={handleSubmit}>
             {loading ? <ThreeBounce size={9} color="#fff" /> : "Log In"}
           </Button>
-          <SmallButton>Forgotten Password?</SmallButton>
+          <Link href="/forgot-password" passHref>
+            <SmallButton>Forgotten Password?</SmallButton>
+          </Link>
           <span
             style={{
               height: "1.5px",
