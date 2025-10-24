@@ -19,16 +19,36 @@ Please give this repository a ⭐ if you liked this app. It seems like a little 
 
 ## Features
 
-- User authentication
-- User profile
-- User posts
-- User followers
-- User following
-- User likes
-- User comments
-- User notifications
-- User chats
-- User search
+### ✅ **Core Features**
+- User authentication with JWT
+- User profile management
+- User posts with images
+- User followers and following system
+- User likes and comments
+- Real-time notifications
+- Real-time chat system
+- User search functionality
+- Dark mode support
+- Password reset system
+- Settings page with profile management
+
+### 🎭 **Advanced Social Features**
+- **Post Reactions** - 6 reaction types (like, love, laugh, wow, sad, angry) with emoji picker
+- **Post Bookmarks** - Save posts for later viewing with dedicated bookmarks page
+- **Hashtag System** - Automatic hashtag extraction, trending hashtags, and hashtag-based filtering
+- **User Mentions** - @username mentions in posts and comments with automatic linking
+- **Advanced Search** - Comprehensive search across users, posts, and hashtags with filters
+- **User Blocking** - Block users and hide their content from feeds
+- **Content Reporting** - Report inappropriate content with admin review system
+
+### 🔧 **Technical Features**
+- **Real-time Communication** - Socket.io for live chats and notifications
+- **Image Upload** - Cloudinary integration for profile pictures and post images
+- **Email System** - Nodemailer for password reset and notifications
+- **Responsive Design** - Mobile-first design with TailwindCSS
+- **State Management** - Redux for global state management
+- **API Architecture** - RESTful API with Express.js
+- **Database** - MongoDB with Mongoose ODM
 
 ## Installation
 
@@ -45,18 +65,119 @@ npm install
 npm run dev
 ```
 
+## Project Structure
+
+```
+├── api/                    # API routes
+│   ├── auth.js            # Authentication endpoints
+│   ├── posts.js           # Post management (CRUD, reactions, bookmarks)
+│   ├── profile.js         # User profile management
+│   ├── search.js          # Search functionality
+│   ├── block.js           # User blocking system
+│   ├── reports.js         # Content reporting
+│   └── forgot-password.js # Password reset
+├── components/            # React components
+│   ├── ReactionPicker.js  # Post reaction system
+│   ├── ReactionDisplay.js # Reaction count display
+│   ├── BlockUserButton.js # User blocking interface
+│   ├── ReportButton.js    # Content reporting
+│   └── HelperComponents/  # Reusable UI components
+├── models/                # Database models
+│   ├── UserModel.js       # User schema
+│   ├── PostModel.js       # Post schema with reactions
+│   └── ReportModel.js     # Report schema
+├── pages/                 # Next.js pages
+│   ├── search.js          # Advanced search page
+│   ├── bookmarks.js       # Saved posts page
+│   ├── hashtag/[hashtag].js # Hashtag pages
+│   └── settings.js        # User settings
+├── utils/                 # Utility functions
+│   └── hashtagUtils.js    # Hashtag processing
+└── contexts/              # React contexts
+    └── ThemeContext.js    # Dark mode management
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth` - Login
+- `POST /api/signup` - Register
+- `POST /api/forgot-password/request` - Request password reset
+- `POST /api/forgot-password/reset` - Reset password
+
+### Posts
+- `GET /api/posts` - Get all posts
+- `POST /api/posts` - Create post
+- `POST /api/posts/like/:postId` - Like post
+- `POST /api/posts/reaction/:postId` - Add reaction
+- `POST /api/posts/bookmark/:postId` - Bookmark post
+- `GET /api/posts/bookmarks` - Get bookmarked posts
+- `GET /api/posts/hashtag/:hashtag` - Get posts by hashtag
+- `GET /api/posts/trending/hashtags` - Get trending hashtags
+
+### Search & Discovery
+- `GET /api/search/:searchTerm` - Search users
+- `GET /api/posts/search` - Search posts
+- `GET /api/posts/trending/hashtags` - Trending hashtags
+
+### User Management
+- `GET /api/profile` - Get user profile
+- `PUT /api/profile` - Update profile
+- `POST /api/block/:userId` - Block user
+- `DELETE /api/block/:userId` - Unblock user
+- `GET /api/block` - Get blocked users
+
+### Content Moderation
+- `POST /api/reports` - Report content
+- `GET /api/reports` - Get reports (admin)
+- `PUT /api/reports/:reportId` - Update report status
+
+## Current Status
+
+### 🎯 **Development Progress**
+- **✅ Core Features**: 100% Complete
+- **✅ Advanced Social Features**: 100% Complete  
+- **✅ User Safety Features**: 100% Complete
+- **✅ Search & Discovery**: 100% Complete
+- **🔄 Security Features**: 0% Complete (Next Priority)
+- **🔄 Analytics Features**: 0% Complete
+- **🔄 Performance Optimization**: 0% Complete
+
+### 📊 **Feature Statistics**
+- **Total Features**: 50+ implemented
+- **API Endpoints**: 25+ endpoints
+- **React Components**: 15+ new components
+- **Database Models**: 3 enhanced models
+- **Pages**: 5+ new pages
+
+### 🚀 **Next Development Phase**
+The next development phase will focus on:
+1. **Security Enhancements** - 2FA, email verification, enhanced security
+2. **Analytics & Insights** - Post analytics, user engagement metrics
+3. **Performance Optimization** - Caching, CDN, database optimization
+4. **Mobile Experience** - PWA, mobile app, responsive improvements
+
 ## To-do
+
+### ✅ **Recently Completed Features**
+- [x] **Post Reactions** - 6 reaction types (like, love, laugh, wow, sad, angry) with emoji picker
+- [x] **Post Bookmarks** - Save posts for later viewing with dedicated bookmarks page
+- [x] **Hashtag System** - Automatic hashtag extraction, trending hashtags, and hashtag-based filtering
+- [x] **User Mentions** - @username mentions in posts and comments with automatic linking
+- [x] **Advanced Search** - Comprehensive search across users, posts, and hashtags with filters
+- [x] **User Blocking** - Block users and hide their content from feeds
+- [x] **Content Reporting** - Report inappropriate content with admin review system
+- [x] **Dark Mode** - Complete dark mode implementation with theme context
+- [x] **Password Reset** - Forgot password functionality with email verification
+- [x] **Settings Page** - Comprehensive settings with profile, password, and notification management
 
 ### 🚀 **High Priority Features**
 
 #### **Content & Engagement**
 - [ ] **Post Sharing** - Share posts to external platforms
-- [ ] **Post Reactions** - Add more reaction types beyond likes (love, laugh, angry, sad)
-- [ ] **Post Bookmarks/Saves** - Save posts for later viewing
 - [ ] **Post Scheduling** - Schedule posts for future publication
 - [ ] **Post Drafts** - Save posts as drafts before publishing
 - [ ] **Post Analytics** - View post engagement metrics (views, likes, comments)
-- [ ] **Post Categories/Tags** - Categorize posts with hashtags or tags
 - [ ] **Post Polls** - Create interactive polls in posts
 - [ ] **Post Stories** - Instagram-style stories with 24-hour expiration
 
@@ -68,16 +189,10 @@ npm run dev
 - [ ] **Voice Messages** - Send voice notes in chats
 - [ ] **File Sharing** - Share documents, PDFs, and other files
 - [ ] **Location Sharing** - Share current location or check-ins
-- [ ] **User Mentions** - @username mentions in posts and comments
-- [ ] **Hashtag System** - Clickable hashtags with trending topics
 
 #### **User Experience**
-- [ ] **Advanced Search** - Search posts, users, and content with filters
 - [ ] **Content Discovery** - Algorithm-based content recommendations
-- [ ] **Trending Topics** - Show trending hashtags and topics
 - [ ] **User Verification** - Blue checkmark for verified accounts
-- [ ] **User Blocking** - Block users and hide their content
-- [ ] **Content Reporting** - Report inappropriate content
 - [ ] **User Privacy Controls** - Granular privacy settings
 - [ ] **Account Deactivation** - Temporarily deactivate account
 - [ ] **Data Export** - Export user data (GDPR compliance)
