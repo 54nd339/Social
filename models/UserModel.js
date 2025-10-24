@@ -28,6 +28,10 @@ const UserSchema = new Schema(
     resetToken: { type: String },
 
     expireToken: { type: Date },
+
+    blockedUsers: [{ user: { type: Schema.Types.ObjectId, ref: "User" } }],
+
+    blockedBy: [{ user: { type: Schema.Types.ObjectId, ref: "User" } }],
     //token sent to user for password reset will be valid for 1 hour. We'll check that validity using this expire token
   },
   { timestamps: true }

@@ -12,6 +12,19 @@ const {
   removeCommentNotification,
 } = require("../utils/notificationActions");
 
+// Utility functions for hashtags and mentions
+const extractHashtags = (text) => {
+  const hashtagRegex = /#[\w\u0590-\u05ff]+/g;
+  const matches = text.match(hashtagRegex);
+  return matches ? matches.map(tag => tag.toLowerCase()) : [];
+};
+
+const extractMentions = (text) => {
+  const mentionRegex = /@[\w]+/g;
+  const matches = text.match(mentionRegex);
+  return matches ? matches.map(mention => mention.substring(1)) : [];
+};
+
 //CREATE A POST
 
 router.post("/", authMiddleware, async (req, res) => {
@@ -21,10 +34,19 @@ router.post("/", authMiddleware, async (req, res) => {
     return res.status(401).send("Text must be atleast 1 character");
 
   try {
+    const hashtags = extractHashtags(text);
+    const mentions = extractMentions(text);
+    
+    // Find mentioned users
+    const mentionedUsers = await UserModel.find({
+      username: { $in: mentions }
+    });
+
     const newPost = {
-      //req.userId is from our authMiddleware
       user: req.userId,
       text,
+      hashtags,
+      mentions: mentionedUsers.map(user => ({ user: user._id }))
     };
 
     if (location) newPost.location = location;
@@ -34,7 +56,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const postCreated = await PostModel.findById(post._id).populate("user");
 
-    return res.json(postCreated); //returning post now just for testing
+    return res.json(postCreated);
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server error");
@@ -339,6 +361,185 @@ router.delete("/:postId/:commentId", authMiddleware, async (req, res) => {
     }
 
     return res.status(200).send("Comment deleted successfully");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//ADD REACTION TO POST
+router.post("/reaction/:postId", authMiddleware, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req;
+    const { type } = req.body;
+    
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+
+    // Remove existing reaction from this user
+    post.reactions = post.reactions.filter(reaction => reaction.user.toString() !== userId);
+    
+    // Add new reaction
+    post.reactions.unshift({ user: userId, type });
+    await post.save();
+
+    // Send notification if not the post owner
+    if (post.user.toString() !== userId) {
+      await newLikeNotification(userId, postId, post.user.toString());
+    }
+
+    return res.status(200).json({ message: "Reaction added", reactions: post.reactions });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//REMOVE REACTION FROM POST
+router.delete("/reaction/:postId", authMiddleware, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req;
+    
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+
+    post.reactions = post.reactions.filter(reaction => reaction.user.toString() !== userId);
+    await post.save();
+
+    return res.status(200).json({ message: "Reaction removed", reactions: post.reactions });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//BOOKMARK POST
+router.post("/bookmark/:postId", authMiddleware, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req;
+    
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+
+    const isBookmarked = post.bookmarks.some(bookmark => bookmark.user.toString() === userId);
+    
+    if (isBookmarked) {
+      return res.status(401).send("Post already bookmarked");
+    }
+
+    post.bookmarks.unshift({ user: userId });
+    await post.save();
+
+    return res.status(200).json({ message: "Post bookmarked" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//REMOVE BOOKMARK
+router.delete("/bookmark/:postId", authMiddleware, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req;
+    
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
+
+    post.bookmarks = post.bookmarks.filter(bookmark => bookmark.user.toString() !== userId);
+    await post.save();
+
+    return res.status(200).json({ message: "Bookmark removed" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//GET BOOKMARKED POSTS
+router.get("/bookmarks", authMiddleware, async (req, res) => {
+  try {
+    const { userId } = req;
+    
+    const posts = await PostModel.find({
+      "bookmarks.user": userId
+    })
+    .populate("user")
+    .sort({ createdAt: -1 });
+
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//GET POSTS BY HASHTAG
+router.get("/hashtag/:hashtag", authMiddleware, async (req, res) => {
+  try {
+    const { hashtag } = req.params;
+    
+    const posts = await PostModel.find({
+      hashtags: { $in: [hashtag] }
+    })
+    .populate("user")
+    .sort({ createdAt: -1 });
+
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//GET TRENDING HASHTAGS
+router.get("/trending/hashtags", authMiddleware, async (req, res) => {
+  try {
+    const hashtags = await PostModel.aggregate([
+      { $unwind: "$hashtags" },
+      { $group: { _id: "$hashtags", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 10 }
+    ]);
+
+    return res.status(200).json(hashtags);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+//SEARCH POSTS
+router.get("/search", authMiddleware, async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q) {
+      return res.status(400).send("Search query is required");
+    }
+
+    const posts = await PostModel.find({
+      $or: [
+        { text: { $regex: q, $options: 'i' } },
+        { hashtags: { $in: [new RegExp(q, 'i')] } }
+      ]
+    })
+    .populate("user")
+    .sort({ createdAt: -1 })
+    .limit(20);
+
+    return res.status(200).json(posts);
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server error");

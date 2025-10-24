@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { passwordUpdate, toggleMessagePopup } from "../utils/profileActions";
-import { catchErrors } from "../utils/utils";
+import catchErrors from "../utils/catchErrors";
 import axios from "axios";
 import baseUrl from "../utils/baseUrl";
 

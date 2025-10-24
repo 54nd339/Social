@@ -1,25 +1,28 @@
 const express = require("express");
-const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
 const UserModel = require("../models/UserModel");
+const PostModel = require("../models/PostModel");
+const router = express.Router();
 
-router.get("/:searchText", authMiddleware, async (req, res) => {
-  const { searchText } = req.params;
-  const { userId } = req;
-
-  if (searchText.length === 0) return;
-
+//SEARCH USERS
+router.get("/:searchTerm", authMiddleware, async (req, res) => {
   try {
-    const results = await UserModel.find({
-      name: { $regex: searchText, $options: "i" },
-    }); //options: i means that it will be case insensitive
+    const { searchTerm } = req.params;
+    
+    if (!searchTerm) {
+      return res.status(400).send("Search term is required");
+    }
 
-    //checking if any of the result is the same as logged in user
-    const resultsToBeSent =
-      results.length > 0 &&
-      results.filter((result) => result._id.toString() !== userId);
+    const users = await UserModel.find({
+      $or: [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { username: { $regex: searchTerm, $options: 'i' } }
+      ]
+    })
+    .select("name username profilePicUrl")
+    .limit(10);
 
-    return res.status(200).json(resultsToBeSent);
+    return res.status(200).json(users);
   } catch (error) {
     console.log(error);
     return res.status(500).send("Server error");

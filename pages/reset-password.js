@@ -9,7 +9,7 @@ import { Error } from "../components/HelperComponents/Error";
 import { InfoBox } from "../components/HelperComponents/InfoBox";
 import axios from "axios";
 import baseUrl from "../utils/baseUrl";
-import { catchErrors } from "../utils/utils";
+import catchErrors from "../utils/catchErrors";
 import { useRouter } from "next/router";
 
 function ResetPassword() {

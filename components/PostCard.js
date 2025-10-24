@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import calculateTime from "../utils/calculateTime";
-import { ThumbUpIcon } from "@heroicons/react/solid";
+import { ThumbUpIcon, BookmarkIcon } from "@heroicons/react/solid";
 import {
   ChatAltIcon,
   MinusCircleIcon,
   ShareIcon,
   ThumbUpIcon as ThumbUpOutlineIcon,
+  BookmarkIcon as BookmarkOutlineIcon,
 } from "@heroicons/react/outline";
 import { deletePost, likePost, postComment } from "../utils/postActions";
 import CommentComponent from "./CommentComponent";
@@ -15,6 +16,9 @@ import { useRouter } from "next/router";
 import ReusableDialog from "./ReusableDialog";
 import toast, { Toaster } from "react-hot-toast";
 import baseUrl from "../utils/baseUrl";
+import ReactionPicker from "./ReactionPicker";
+import ReactionDisplay from "./ReactionDisplay";
+import { extractHashtags, formatTextWithHashtags } from "../utils/hashtagUtils";
 
 const notify = () =>
   toast.success("Post deleted successfully!", {
@@ -29,11 +33,15 @@ const notifyCopyLink = () =>
 function PostCard({ post, user, setPosts, postById }) {
   const router = useRouter();
   const [likes, setLikes] = useState(post.likes);
+  const [reactions, setReactions] = useState(post.reactions || []);
+  const [bookmarks, setBookmarks] = useState(post.bookmarks || []);
   const [comments, setComments] = useState(post.comments);
   const [error, setError] = useState(null);
   const isLiked =
     likes.length > 0 &&
-    likes.filter((like) => like.user === user._id).length > 0; //check if post has been liked by logged in user
+    likes.filter((like) => like.user === user._id).length > 0;
+  const isBookmarked = bookmarks.some(bookmark => bookmark.user === user._id);
+  const userReaction = reactions.find(reaction => reaction.user === user._id)?.type;
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(postById ? true : false);
   const [loading, setLoading] = useState(false);
@@ -45,6 +53,48 @@ function PostCard({ post, user, setPosts, postById }) {
     setLoading(true);
     await postComment(post._id, user, commentText, setComments, setCommentText);
     setLoading(false);
+  };
+
+  const handleBookmark = async () => {
+    try {
+      const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='))
+        ?.split('=')[1];
+
+      if (isBookmarked) {
+        await fetch(`${baseUrl}/api/posts/bookmark/${post._id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          }
+        });
+        setBookmarks(prev => prev.filter(bookmark => bookmark.user !== user._id));
+      } else {
+        await fetch(`${baseUrl}/api/posts/bookmark/${post._id}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          }
+        });
+        setBookmarks(prev => [...prev, { user: user._id }]);
+      }
+    } catch (error) {
+      console.error('Error updating bookmark:', error);
+    }
+  };
+
+  const handleReactionChange = (newReaction) => {
+    if (newReaction) {
+      setReactions(prev => {
+        const filtered = prev.filter(reaction => reaction.user !== user._id);
+        return [...filtered, { user: user._id, type: newReaction }];
+      });
+    } else {
+      setReactions(prev => prev.filter(reaction => reaction.user !== user._id));
+    }
   };
 
   const onEnterPress = (e) => {
