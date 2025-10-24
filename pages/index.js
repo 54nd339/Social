@@ -7,6 +7,7 @@ import Feed from "../components/Feed";
 import baseUrl from "../utils/baseUrl";
 import styles from "../styles/styles.module.css";
 import RightSideColumn from "../components/RightSideColumn";
+import TrendingHashtags from "../components/TrendingHashtags";
 
 function Home({ user, userFollowStats, postsData, chatsData, errorLoading }) {
   return (
@@ -25,11 +26,14 @@ function Home({ user, userFollowStats, postsData, chatsData, errorLoading }) {
               sizeIncUp: styles.sizeup,
             }}
           />
-          <RightSideColumn
-            chatsData={chatsData}
-            userFollowStats={userFollowStats}
-            user={user}
-          />
+          <div className="flex flex-col space-y-4">
+            <RightSideColumn
+              chatsData={chatsData}
+              userFollowStats={userFollowStats}
+              user={user}
+            />
+            <TrendingHashtags />
+          </div>
         </main>
       </div>
     </>

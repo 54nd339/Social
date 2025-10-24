@@ -18,6 +18,8 @@ import toast, { Toaster } from "react-hot-toast";
 import baseUrl from "../utils/baseUrl";
 import ReactionPicker from "./ReactionPicker";
 import ReactionDisplay from "./ReactionDisplay";
+import PostText from "./PostText";
+import HashtagDisplay from "./HashtagDisplay";
 import { extractHashtags, formatTextWithHashtags } from "../utils/hashtagUtils";
 
 const notify = () =>
@@ -177,7 +179,10 @@ function PostCard({ post, user, setPosts, postById }) {
             </ThreeDotsDiv>
           )}
         </div>
-        <p className="ml-2 mt-5">{post.text}</p>
+        <PostText text={post.text} className="ml-2 mt-5" />
+        {post.hashtags && post.hashtags.length > 0 && (
+          <HashtagDisplay hashtags={post.hashtags} className="ml-2 mt-2" />
+        )}
       </div>
 
       {post.picUrl && <PostImage src={post.picUrl} />}

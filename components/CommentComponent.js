@@ -6,6 +6,7 @@ import { MinusCircleIcon, TrashIcon } from "@heroicons/react/outline";
 import ReusableDialog from "./ReusableDialog";
 import { deleteComment } from "../utils/postActions";
 import toast, { Toaster } from "react-hot-toast";
+import PostText from "./PostText";
 
 const notifyCommentDelete = () =>
   toast.success("Comment deleted successfully!", {
@@ -73,12 +74,11 @@ function CommentComponent({ comment, postId, user, setComments }) {
             </span>
           </div>
 
-          <p
-            className="text-gray-800 font-light"
+          <PostText 
+            text={comment.text}
+            className="text-gray-800 dark:text-gray-200 font-light"
             style={{ fontSize: "0.97rem" }}
-          >
-            {comment.text}
-          </p>
+          />
         </div>
         {isHovering && comment.user._id === user._id ? (
           <div style={{ width: "3rem", marginLeft: "0.2rem" }}>
