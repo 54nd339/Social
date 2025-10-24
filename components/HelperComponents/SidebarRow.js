@@ -5,7 +5,7 @@ import Link from "next/link";
 function SidebarRow({ Icon, title, src, route }) {
   return (
     <Link href={route} passHref>
-      <div className="cursor-pointer flex items-center space-x-4 p-4 hover:bg-gray-200 rounded-md">
+      <div className="cursor-pointer flex items-center space-x-4 p-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
         {src && <Image src={src} alt="profile pic" />}
         {Icon && <Icon style={{ color: "#7d67e9" }} className="h-9 w-9" />}
         <p
@@ -14,7 +14,7 @@ function SidebarRow({ Icon, title, src, route }) {
             fontWeight: "500",
             fontSize: "1.05rem",
           }}
-          className="hidden sm:inline-flex text-l"
+          className="hidden sm:inline-flex text-l text-gray-900 dark:text-white"
         >
           {title}
         </p>

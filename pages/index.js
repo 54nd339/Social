@@ -11,7 +11,7 @@ import RightSideColumn from "../components/RightSideColumn";
 function Home({ user, userFollowStats, postsData, chatsData, errorLoading }) {
   return (
     <>
-      <div className="bg-gray-100 min-h-screen">
+      <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
         <Header user={user} />
 
         <main className="flex">

@@ -39,7 +39,14 @@ const SettingsForm = ({ user, setUser }) => {
     setError("");
 
     try {
-      const res = await axios.put(`${baseUrl}/api/profile`, profileData);
+      const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='))
+        ?.split('=')[1];
+
+      const res = await axios.put(`${baseUrl}/api/profile`, profileData, {
+        headers: { Authorization: token }
+      });
       setUser(res.data.user);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);

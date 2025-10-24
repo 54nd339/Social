@@ -15,8 +15,8 @@ function Sidebar({ user, topDist, maxWidth }) {
     <div
       className={
         maxWidth
-          ? `p-2 max-w-[400px] xl:min-w-[230px]  sticky xl:ml-6`
-          : `p-2 max-w-[600px] xl:min-w-[300px] sticky xl:ml-6`
+          ? `p-2 max-w-[400px] xl:min-w-[230px] sticky xl:ml-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm`
+          : `p-2 max-w-[600px] xl:min-w-[300px] sticky xl:ml-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm`
       }
       style={{
         alignSelf: "flex-start",
